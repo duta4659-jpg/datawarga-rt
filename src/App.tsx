@@ -44,6 +44,7 @@ export default function App() {
   const [keluargaList, setKeluargaList] = useState<Keluarga[]>([]);
   const [rtProfile, setRtProfile] = useState<RTProfile>(() => getRTProfile());
   const [isLoading, setIsLoading] = useState(true);
+  const [dbError, setDbError] = useState<string | null>(null);
   const [wargaAgeFilter, setWargaAgeFilter] = useState<AgeCategory | 'ALL' | 'BALITA_BATITA'>('ALL');
   const [focusSearchTrigger, setFocusSearchTrigger] = useState(0);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -69,6 +70,14 @@ export default function App() {
         await ensureInitialSampleData();
         if (mounted) {
           await refreshData();
+        }
+      } catch (err) {
+        if (mounted) {
+          setDbError(
+            err instanceof Error
+              ? err.message
+              : 'Gagal mengakses penyimpanan lokal IndexedDB di peramban ini.'
+          );
         }
       } finally {
         if (mounted) setIsLoading(false);
@@ -249,7 +258,16 @@ export default function App() {
 
       {/* Main Content */}
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 pb-24 sm:px-6 lg:px-8 lg:py-8 lg:pb-12">
-        {isLoading ? (
+        {dbError ? (
+          <div className="rounded-2xl border border-red-200 bg-white p-6 space-y-3">
+            <h2 className="text-lg font-bold text-red-800">
+              Penyimpanan Lokal Tidak Dapat Diakses
+            </h2>
+            <p className="text-base text-slate-700">
+              Pastikan Anda tidak menggunakan mode penyamaran (Incognito) yang memblokir IndexedDB. Detail: {dbError}
+            </p>
+          </div>
+        ) : isLoading ? (
           <div className="space-y-4">
             <div className="h-10 w-64 rounded-xl bg-slate-200" />
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">

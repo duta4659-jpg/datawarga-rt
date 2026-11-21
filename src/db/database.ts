@@ -35,9 +35,25 @@ export const DEFAULT_RT_PROFILE: RTProfile = {
   kecamatan: 'Kecamatan Sukaraja',
 };
 
+function safeGetLocalStorage(key: string): string | null {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function safeSetLocalStorage(key: string, value: string): void {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // Ignore storage restriction in private/sandboxed modes
+  }
+}
+
 export function getRTProfile(): RTProfile {
   try {
-    const raw = localStorage.getItem(RT_PROFILE_KEY);
+    const raw = safeGetLocalStorage(RT_PROFILE_KEY);
     if (!raw) return DEFAULT_RT_PROFILE;
     return { ...DEFAULT_RT_PROFILE, ...JSON.parse(raw) };
   } catch {
@@ -46,19 +62,19 @@ export function getRTProfile(): RTProfile {
 }
 
 export function saveRTProfile(profile: RTProfile): void {
-  localStorage.setItem(RT_PROFILE_KEY, JSON.stringify(profile));
+  safeSetLocalStorage(RT_PROFILE_KEY, JSON.stringify(profile));
 }
 
 export async function ensureInitialSampleData(): Promise<void> {
-  const alreadySeeded = localStorage.getItem(INIT_FLAG_KEY);
+  const alreadySeeded = safeGetLocalStorage(INIT_FLAG_KEY);
   const existingCount = await db.warga.count();
   if (alreadySeeded || existingCount > 0) {
-    localStorage.setItem(INIT_FLAG_KEY, '1');
+    safeSetLocalStorage(INIT_FLAG_KEY, '1');
     return;
   }
 
   await seedSampleData();
-  localStorage.setItem(INIT_FLAG_KEY, '1');
+  safeSetLocalStorage(INIT_FLAG_KEY, '1');
 }
 
 export async function seedSampleData(): Promise<void> {
@@ -418,5 +434,5 @@ export async function clearAllLocalData(): Promise<void> {
     await db.warga.clear();
     await db.keluarga.clear();
   });
-  localStorage.setItem(INIT_FLAG_KEY, '1');
+  safeSetLocalStorage(INIT_FLAG_KEY, '1');
 }
