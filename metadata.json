@@ -1,0 +1,6 @@
+{
+  "name": "DataWarga RT — Pendataan Warga Offline",
+  "description": "Aplikasi pendataan Kartu Keluarga, data warga, usia otomatis, dan bantuan sosial untuk Ketua RT dengan penyimpanan lokal IndexedDB (Offline-First).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
