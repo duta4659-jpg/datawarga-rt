@@ -7,7 +7,7 @@ import {VitePWA} from 'vite-plugin-pwa';
 
 export default defineConfig(() => {
   return {
-    base: './',
+    base: '/DataWarga-RT/',
     plugins: [
       react(),
       tailwindcss(),
@@ -15,15 +15,15 @@ export default defineConfig(() => {
         registerType: 'autoUpdate',
         includeAssets: ['icon.svg', 'apple-touch-icon.png', 'pwa-192x192.png', 'pwa-512x512.png', 'pwa-maskable-512x512.png'],
         manifest: {
-          id: './',
+          id: '/DataWarga-RT/',
           name: 'DataWarga RT — Pendataan Warga Offline',
           short_name: 'DataWarga RT',
           description: 'Aplikasi pendataan Kartu Keluarga, warga, usia otomatis, dan bantuan sosial untuk Ketua RT berbasis lokal (Offline-First).',
           theme_color: '#0F766E',
           background_color: '#F8FAFC',
           display: 'standalone',
-          start_url: '.',
-          scope: '.',
+          start_url: '/DataWarga-RT/',
+          scope: '/DataWarga-RT/',
           icons: [
             {
               src: 'pwa-192x192.png',
